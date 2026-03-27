@@ -86,4 +86,3 @@ If needed later, switch backend to SQL mode:
 - ConnectionStrings__DefaultConnection=your_sql_server_connection_string
 
 The Dapper SQL repository and schema initialization are already implemented.
-# techbodia-notes-app
