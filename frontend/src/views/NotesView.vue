@@ -1,134 +1,122 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50 to-indigo-50">
-    <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+  <div class="app-shell">
 
-      <div v-if="!auth.isLoggedIn" class="mx-auto max-w-md rounded-2xl border border-white/70 bg-white/90 p-6 shadow-xl shadow-slate-200/60 backdrop-blur">
-        <h1 class="mb-2 text-2xl font-bold text-slate-900">Quick Login</h1>
-        <p class="mb-5 text-sm text-slate-600">Use any username to start. Notes are scoped by username.</p>
-        <div class="space-y-3">
-          <input
-            v-model="loginForm.username"
-            type="text"
-            placeholder="Username"
-            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
-          />
-          <p v-if="loginError" class="text-sm text-red-500">{{ loginError }}</p>
-          <button
-            @click="handleLogin"
-            class="w-full rounded-lg bg-slate-900 px-4 py-2 font-medium text-white transition hover:bg-slate-800"
-          >
-            Enter Notes App
-          </button>
-        </div>
-      </div>
-
-      <template v-else>
-
-      <!-- Header -->
-      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 class="text-3xl font-bold tracking-tight text-slate-900">My Notes</h1>
-          <p class="mt-1 text-sm text-slate-600">Signed in as <span class="font-semibold text-slate-800">{{ auth.username }}</span></p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            @click="openCreate"
-            class="rounded-lg bg-sky-600 px-4 py-2 font-medium text-white transition hover:bg-sky-700"
-          >
-            + New Note
-          </button>
-          <button
-            @click="handleLogout"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
-          >
-            Logout
-          </button>
-        </div>
-      </div>
-
-      <!-- Search + Sort -->
-      <div class="mb-6 flex flex-col gap-3 sm:flex-row">
+    <!-- LOGIN SCREEN -->
+    <div v-if="!auth.isLoggedIn" class="login-wrap">
+      <div class="login-card">
+        <h1 class="login-title">Notes</h1>
+        <p class="login-sub">Enter a username to get started.</p>
         <input
-          v-model="store.searchQuery"
+          v-model="loginForm.username"
           type="text"
-          placeholder="Search notes..."
-          class="flex-1 rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+          placeholder="your username"
+          class="login-input"
+          @keydown.enter="handleLogin"
         />
-        <select
-          v-model="store.sortOrder"
-          class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-700 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
-        >
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-        </select>
+        <p v-if="loginError" class="login-error">{{ loginError }}</p>
+        <button @click="handleLogin" class="login-btn">Enter →</button>
       </div>
+    </div>
 
-      <div v-if="store.error" class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm">
-        {{ store.error }}
-      </div>
+    <!-- MAIN APP -->
+    <template v-else>
 
-      <!-- Loading -->
-      <div v-if="store.loading" class="py-16 text-center text-slate-500">
-        <div class="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-slate-300 border-t-sky-600"></div>
-        Loading notes...
-      </div>
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <span class="brand">Notes</span>
+          <span class="user-badge">User: {{ auth.username }}</span>
+        </div>
+        <div class="sidebar-meta">
+          <span>{{ store.notes.length }} note{{ store.notes.length !== 1 ? 's' : '' }}</span>
+        </div>
+        <button @click="openCreate" class="new-btn">+ New note</button>
+        <button @click="handleLogout" class="logout-btn">Sign out</button>
+      </aside>
 
-      <!-- Empty -->
-      <div v-else-if="store.filteredNotes.length === 0" class="rounded-2xl border border-dashed border-slate-300 bg-white/70 py-16 text-center text-slate-500">
-        <p class="text-lg font-medium text-slate-700">No notes found</p>
-        <p class="mt-1 text-sm">Create one to get started.</p>
-      </div>
+      <!-- MAIN CONTENT -->
+      <main class="main">
 
-      <!-- Notes Grid -->
-      <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div
-          v-for="note in store.filteredNotes"
-          :key="note.id"
-          class="cursor-pointer rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/60 transition hover:-translate-y-0.5 hover:shadow-md"
-          @click="openDetail(note)"
-        >
-          <div class="flex justify-between items-start">
-            <h2 class="flex-1 truncate text-lg font-semibold text-slate-900">{{ note.title }}</h2>
-            <div class="flex gap-2 ml-2" @click.stop>
-              <button @click="openEdit(note)" class="text-sm text-slate-400 transition hover:text-sky-600">Edit</button>
-              <button @click="handleDelete(note.id)" class="text-sm text-slate-400 transition hover:text-red-500">Delete</button>
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <input
+            v-model="store.searchQuery"
+            type="text"
+            placeholder="Search notes…"
+            class="search-input"
+          />
+          <select v-model="store.sortOrder" class="sort-select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
+
+        <!-- ERROR -->
+        <div v-if="store.error" class="error-bar">{{ store.error }}</div>
+
+        <!-- LOADING -->
+        <div v-if="store.loading" class="state-msg">
+          <span class="spinner"></span> Loading…
+        </div>
+
+        <!-- EMPTY -->
+        <div v-else-if="store.filteredNotes.length === 0" class="state-msg empty">
+          <span class="empty-icon">◯</span>
+          <p>No notes yet.</p>
+          <button @click="openCreate" class="empty-cta">Create your first note</button>
+        </div>
+
+        <!-- NOTES GRID -->
+        <div v-else class="notes-grid">
+          <div
+            v-for="(note, i) in store.filteredNotes"
+            :key="note.id"
+            class="note-card"
+            :style="{ animationDelay: `${i * 40}ms` }"
+            @click="openDetail(note)"
+          >
+            <div class="note-card-inner">
+              <div class="note-head">
+                <h2 class="note-title">{{ note.title }}</h2>
+                <div class="note-actions" @click.stop>
+                  <button @click="openEdit(note)" class="action-btn edit-btn">Edit</button>
+                  <button @click="handleDelete(note.id)" class="action-btn del-btn">Delete</button>
+                </div>
+              </div>
+              <div class="note-footer">
+                <span class="note-date">{{ formatDate(note.createdAt) }}</span>
+              </div>
             </div>
           </div>
-          <p class="mt-2 text-xs text-slate-400">Created: {{ formatDate(note.createdAt) }}</p>
+        </div>
+
+      </main>
+    </template>
+
+    <!-- DETAIL MODAL -->
+    <Transition name="modal">
+      <div v-if="selectedNote" class="modal-overlay" @click.self="selectedNote = null">
+        <div class="modal">
+          <button class="modal-close" @click="selectedNote = null">✕</button>
+          <h2 class="modal-title">{{ selectedNote.title }}</h2>
+          <div class="modal-meta">
+            <span>Created {{ formatDate(selectedNote.createdAt) }}</span>
+            <span class="dot">·</span>
+            <span>Updated {{ formatDate(selectedNote.updatedAt) }}</span>
+          </div>
+          <p class="modal-content">{{ selectedNote.content ?? 'No content.' }}</p>
         </div>
       </div>
-      </template>
-    </div>
+    </Transition>
 
-    <!-- Detail Modal -->
-    <div
-      v-if="selectedNote"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      @click.self="selectedNote = null"
-    >
-      <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl shadow-slate-900/20">
-        <h2 class="mb-2 text-2xl font-bold text-slate-900">{{ selectedNote.title }}</h2>
-        <p class="mb-4 text-xs text-slate-400">
-          Created: {{ formatDate(selectedNote.createdAt) }} ·
-          Updated: {{ formatDate(selectedNote.updatedAt) }}
-        </p>
-        <p class="whitespace-pre-wrap text-slate-700">{{ selectedNote.content ?? 'No content' }}</p>
-        <button
-          @click="selectedNote = null"
-          class="mt-6 w-full rounded-lg border border-slate-300 py-2 text-slate-600 transition hover:bg-slate-50"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-
-    <!-- Create/Edit Modal -->
+    <!-- CREATE / EDIT MODAL -->
     <NoteModal
       v-if="showModal"
       :note="editingNote"
       @close="showModal = false"
       @submit="handleSubmit"
     />
+
   </div>
 </template>
 
@@ -148,25 +136,16 @@ const loginError = ref('')
 const loginForm = ref({ username: auth.username })
 
 onMounted(async () => {
-  if (auth.isLoggedIn) {
-    await store.fetchNotes()
-  }
+  if (auth.isLoggedIn) await store.fetchNotes()
 })
 
 async function handleLogin() {
   loginError.value = ''
   const username = loginForm.value.username.trim()
-
-  if (!username) {
-    loginError.value = 'Username is required'
-    return
-  }
-
+  if (!username) { loginError.value = 'Username is required'; return }
   auth.login(username)
   await store.fetchNotes()
-  if (store.error) {
-    loginError.value = store.error
-  }
+  if (store.error) loginError.value = store.error
 }
 
 function handleLogout() {
@@ -177,46 +156,418 @@ function handleLogout() {
   showModal.value = false
 }
 
-function openCreate() {
-  editingNote.value = null
-  showModal.value = true
-}
-
-function openEdit(note: Note) {
-  editingNote.value = note
-  showModal.value = true
-}
-
-function openDetail(note: Note) {
-  selectedNote.value = note
-}
+function openCreate() { editingNote.value = null; showModal.value = true }
+function openEdit(note: Note) { editingNote.value = note; showModal.value = true }
+function openDetail(note: Note) { selectedNote.value = note }
 
 async function handleSubmit(title: string, content: string | null) {
   try {
-    if (editingNote.value) {
-      await store.updateNote(editingNote.value.id, { title, content })
-    } else {
-      await store.createNote({ title, content })
-    }
+    if (editingNote.value) await store.updateNote(editingNote.value.id, { title, content })
+    else await store.createNote({ title, content })
     showModal.value = false
-  } catch {
-    // Store already holds the displayable error message.
-  }
+  } catch {}
 }
 
 async function handleDelete(id: number) {
   if (confirm('Delete this note?')) {
-    try {
-      await store.deleteNote(id)
-    } catch {
-      // Store already holds the displayable error message.
-    }
+    try { await store.deleteNote(id) } catch {}
   }
 }
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'short', day: 'numeric'
-  })
+  return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 </script>
+
+<style scoped>
+:root {
+  --bg: #fff7fb;
+  --surface: #ffffff;
+  --surface-soft: #fff0f7;
+  --border: #e0a4c4;
+  --accent: #ff1f8f;
+  --accent-strong: #db0f74;
+  --text: #3a1130;
+  --muted: #8d5e79;
+  --muted-soft: #bc89a4;
+  --danger: #d54572;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #ffe8f4 0%, var(--bg) 48%);
+  color: var(--text);
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  display: flex;
+}
+
+.login-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 40px 34px;
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 18px 40px rgba(255, 31, 143, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-mark { font-size: 30px; color: var(--accent); line-height: 1; }
+.login-title { font-size: 34px; margin: 0; color: var(--text); }
+.login-sub { font-size: 13px; color: var(--muted); line-height: 1.55; margin: 0; }
+
+.login-input {
+  background: #fff;
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.login-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 31, 143, 0.16);
+}
+.login-input::placeholder { color: var(--muted-soft); }
+.login-error { font-size: 12px; color: var(--danger); margin: 0; }
+
+.login-btn {
+  background: var(--accent);
+  color: var(--text);
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.login-btn:hover { background: #fff0f7; }
+.login-btn:active { transform: translateY(1px); }
+
+.sidebar {
+  width: 230px;
+  min-height: 100vh;
+  border-right: 1.5px solid var(--border);
+  background: var(--surface-soft);
+  padding: 26px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* margin-bottom: 6px; */
+}
+
+.brand { font-size: 20px; color: var(--accent); font-weight: 700; }
+
+.user-badge {
+  font-size: 12px;
+  color: var(--muted);
+  background: #fff;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.new-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  padding: 11px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+.new-btn:hover { background: #fff0f7; }
+
+.sidebar-meta {
+  font-size: 11px;
+  color: var(--muted-soft);
+  /* margin-top: 8px; */
+}
+
+.logout-btn {
+  background: var(--surface);
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  padding: 9px 14px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  margin-top: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+.logout-btn:hover { background: #fff0f7; color: var(--danger); border-color: var(--danger); }
+
+.main {
+  flex: 1;
+  margin: 16px;
+  padding: 28px 30px;
+  max-width: 980px;
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 30px rgba(255, 31, 143, 0.08);
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.search-input,
+.sort-select {
+  background: #fff;
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 31, 143, 0.16);
+}
+
+.search-input::placeholder { color: var(--muted-soft); }
+.sort-select { padding: 10px 12px; cursor: pointer; }
+
+.error-bar {
+  background: #fff1f5;
+  border: 1.5px solid #ef9ab9;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--danger);
+  margin-bottom: 18px;
+}
+
+.state-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 80px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-icon { font-size: 32px; color: var(--border); }
+
+.empty-cta {
+  margin-top: 6px;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 16px;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.empty-cta:hover { border-color: var(--accent); color: var(--accent); }
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.note-card {
+  border: 1.5px solid #efb0cd;
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  animation: fadeUp 0.3s ease both;
+}
+.note-card:hover {
+  border-color: #ef9ab9;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(255, 31, 143, 0.12);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.note-card-inner { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+.note-title { font-size: 16px; color: var(--text); margin: 0; }
+
+.note-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.note-date { font-size: 11px; color: var(--muted-soft); }
+
+.note-actions {
+  display: flex;
+  gap: 10px;
+  opacity: 1;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 0;
+  transition: color 0.15s;
+}
+.edit-btn { color: var(--muted); }
+.edit-btn:hover { color: var(--accent); }
+.del-btn { color: var(--muted); }
+.del-btn:hover { color: var(--danger); }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  box-shadow: 0 22px 40px rgba(255, 31, 143, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--muted-soft);
+  font-size: 16px;
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--text); }
+
+.modal-title {
+  font-size: 24px;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-soft);
+  margin-bottom: 16px;
+}
+.dot { color: var(--border); }
+
+.modal-content {
+  font-size: 15px;
+  color: #5c2a47;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.modal-enter-active,
+.modal-leave-active { transition: opacity 0.2s; }
+.modal-enter-from,
+.modal-leave-to { opacity: 0; }
+
+@media (max-width: 640px) {
+  .app-shell { flex-direction: column; }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    min-height: unset;
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+
+  .sidebar-top { flex-direction: row; align-items: center; flex: 1; }
+  .sidebar-meta { display: none; }
+  .main {
+    margin: 10px;
+    padding: 18px 14px;
+  }
+}
+</style>
