@@ -2,26 +2,24 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 const USERNAME_KEY = 'notes.username'
-const PASSWORD_KEY = 'notes.password'
+const LEGACY_PASSWORD_KEY = 'notes.password'
 
 export const useAuthStore = defineStore('auth', () => {
   const username = ref(localStorage.getItem(USERNAME_KEY) ?? '')
-  const password = ref(localStorage.getItem(PASSWORD_KEY) ?? '')
+  localStorage.removeItem(LEGACY_PASSWORD_KEY)
 
-  const isLoggedIn = computed(() => username.value.trim().length > 0 && password.value.length > 0)
+  const isLoggedIn = computed(() => username.value.trim().length > 0)
 
-  function login(nextUsername: string, nextPassword: string) {
+  function login(nextUsername: string) {
     username.value = nextUsername.trim()
-    password.value = nextPassword
     localStorage.setItem(USERNAME_KEY, username.value)
-    localStorage.setItem(PASSWORD_KEY, password.value)
+    localStorage.removeItem(LEGACY_PASSWORD_KEY)
   }
 
   function logout() {
     username.value = ''
-    password.value = ''
     localStorage.removeItem(USERNAME_KEY)
-    localStorage.removeItem(PASSWORD_KEY)
+    localStorage.removeItem(LEGACY_PASSWORD_KEY)
   }
 
   return {

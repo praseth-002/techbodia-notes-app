@@ -6,7 +6,7 @@ Vue 3 + TypeScript + Tailwind frontend for the notes app.
 
 - Notes CRUD UI (create, read, update, delete)
 - Search and sort by created date
-- Simple login gate (username/password)
+- Simple login gate (username only)
 - Per-user note scoping via `X-User-Name` header
 - Responsive Tailwind layout
 - API integration via Axios
@@ -15,6 +15,10 @@ Vue 3 + TypeScript + Tailwind frontend for the notes app.
 
 - Frontend: GitHub Pages
 - Backend API: Railway
+
+## Live URL
+
+- https://praseth-002.github.io/techbodia-notes-app/
 
 ## Recommended IDE Setup
 
@@ -51,7 +55,7 @@ npm run dev
 
 By default, the app calls:
 
-- `http://localhost:5187/api`
+- http://localhost:5187/api
 
 To use a different backend URL, create `frontend/.env.local`:
 
@@ -91,27 +95,12 @@ npm install
 npm run dev
 ```
 
-## Backend Storage Modes
-
-The backend supports both modes via `StorageProvider` in `backend/appsettings.Development.json`:
-
-- `InMemory` (default): fast local testing, no SQL setup
-- `SqlServer`: real persistence with Dapper + SQL Server
-
-To enable SQL mode:
-
-1. Set `StorageProvider` to `SqlServer`
-2. Set `ConnectionStrings.DefaultConnection`
-3. Start backend again
-
-Schema is auto-created by the backend, and a SQL script is included at `backend/sql/init.sql`.
-
 ## GitHub Pages Deployment
 
 A GitHub Actions workflow is already included at `.github/workflows/frontend-pages.yml`.
 
 Required repository variable:
 
-- VITE_API_BASE_URL=https://your-backend-service.up.railway.app/api
+- VITE_API_BASE_URL=https://techbodia-notes-app-production.up.railway.app/api
 
 The workflow sets `VITE_BASE_PATH` automatically from repository name.

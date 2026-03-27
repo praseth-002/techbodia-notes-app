@@ -8,6 +8,7 @@ export const useNoteStore = defineStore('notes', () => {
   const searchQuery = ref('')
   const sortOrder = ref<'newest' | 'oldest'>('newest')
   const loading = ref(false)
+  const error = ref('')
 
   const filteredNotes = computed(() => {
     let result = [...notes.value]
@@ -30,29 +31,54 @@ export const useNoteStore = defineStore('notes', () => {
 
   async function fetchNotes() {
     loading.value = true
-    const res = await notesApi.getAll()
-    notes.value = res.data
-    loading.value = false
+    error.value = ''
+    try {
+      const res = await notesApi.getAll()
+      notes.value = res.data
+    } catch {
+      error.value = 'Failed to load notes. Check API URL and backend status.'
+      notes.value = []
+    } finally {
+      loading.value = false
+    }
   }
 
   async function createNote(dto: CreateNoteDto) {
-    const res = await notesApi.create(dto)
-    notes.value.push(res.data)
+    error.value = ''
+    try {
+      const res = await notesApi.create(dto)
+      notes.value.push(res.data)
+    } catch {
+      error.value = 'Failed to create note.'
+      throw new Error(error.value)
+    }
   }
 
   async function updateNote(id: number, dto: UpdateNoteDto) {
-    const res = await notesApi.update(id, dto)
-    const index = notes.value.findIndex(n => n.id === id)
-    if (index !== -1) notes.value[index] = res.data
+    error.value = ''
+    try {
+      const res = await notesApi.update(id, dto)
+      const index = notes.value.findIndex(n => n.id === id)
+      if (index !== -1) notes.value[index] = res.data
+    } catch {
+      error.value = 'Failed to update note.'
+      throw new Error(error.value)
+    }
   }
 
   async function deleteNote(id: number) {
-    await notesApi.delete(id)
-    notes.value = notes.value.filter(n => n.id !== id)
+    error.value = ''
+    try {
+      await notesApi.delete(id)
+      notes.value = notes.value.filter(n => n.id !== id)
+    } catch {
+      error.value = 'Failed to delete note.'
+      throw new Error(error.value)
+    }
   }
 
   return {
-    notes, searchQuery, sortOrder, loading, filteredNotes,
+    notes, searchQuery, sortOrder, loading, error, filteredNotes,
     fetchNotes, createNote, updateNote, deleteNote
   }
 })

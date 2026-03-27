@@ -31,16 +31,20 @@ dotnet run --launch-profile http
 
 ## Railway Deploy (InMemory)
 
-Railway deployment files are included in the repo root and backend folder.
+Railway deployment files are included in this repository.
 
 Set environment variables:
 
 - StorageProvider=InMemory
 - Cors__AllowedOrigins__0=http://localhost:5173
 - Cors__AllowedOrigins__1=http://127.0.0.1:5173
-- Cors__AllowedOrigins__2=https://YOUR_GITHUB_USERNAME.github.io
+- Cors__AllowedOrigins__2=https://praseth-002.github.io
 
-## Switch To SQL Server + Dapper
+Optional health check path:
+
+- /health
+
+## Switch to SQL Server + Dapper
 
 1. Start SQL Server (optional Docker path from repo root):
 

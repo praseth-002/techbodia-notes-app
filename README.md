@@ -1,88 +1,68 @@
 # techbodia-notes-app
 
-Full-stack notes app built with:
+Full-stack notes application built for internship assessment.
 
-- Frontend: Vue 3 + TypeScript + Tailwind
-- Backend: ASP.NET Core Web API
-- ORM: Dapper
-- Database mode: InMemory (default), SqlServer (optional)
+## Stack
 
-## Current Recommended Mode
+- Frontend: Vue 3, TypeScript, Tailwind CSS
+- Backend: ASP.NET Core Web API (.NET 9)
+- Data access: Dapper
+- Storage mode: InMemory by default, SqlServer optional
 
-For fastest completion and submission, run with InMemory storage.
-No database setup required.
+## Live URLs
 
-## Local Run (InMemory)
+- Frontend: https://praseth-002.github.io/techbodia-notes-app/
+- Backend health: https://techbodia-notes-app-production.up.railway.app/health
+- Backend API base: https://techbodia-notes-app-production.up.railway.app/api
 
-1) Start backend
+## Current Deployment Mode
 
-- cd backend
-- dotnet run --launch-profile http
+The deployed version currently uses InMemory storage for quick proof-of-concept.
+Data can reset when the backend restarts.
 
-2) Start frontend
+## Run Locally
 
-- cd frontend
-- npm install
-- npm run dev
+1. Start backend
 
-3) Open app
+```sh
+cd backend
+dotnet run --launch-profile http
+```
+
+2. Start frontend
+
+```sh
+cd frontend
+npm install
+npm run dev
+```
+
+3. Open app
 
 - http://127.0.0.1:5173
 
-## Deployment Prep Included
+## Deployment
 
-This repository is already prepared for:
+- Railway backend deployment is configured with Docker.
+- GitHub Pages frontend deployment is configured with GitHub Actions.
 
-- Railway backend deploy (Docker)
-- GitHub Pages frontend deploy (GitHub Actions)
-
-### Railway Files
+Key files:
 
 - railway.json
 - backend/Dockerfile
-- backend/.dockerignore
-
-### GitHub Pages Files
-
 - .github/workflows/frontend-pages.yml
-- frontend/vite.config.ts
 
-## Railway Backend Setup
+## Notes API contract
 
-1) Create a new Railway project and connect this repository.
-2) Deploy using the included Docker config.
-3) Set backend environment variables:
+All /api/notes routes require this header:
 
-- StorageProvider=InMemory
-- Cors__AllowedOrigins__0=http://localhost:5173
-- Cors__AllowedOrigins__1=http://127.0.0.1:5173
-- Cors__AllowedOrigins__2=https://YOUR_GITHUB_USERNAME.github.io
+- X-User-Name: your_username
 
-4) Copy backend URL after deploy. Example:
+## Optional SQL Server mode
 
-- https://your-service.up.railway.app
-
-Health check endpoint is available at:
-
-- /health
-
-## GitHub Pages Frontend Setup
-
-1) In GitHub repository settings, enable Pages with GitHub Actions source.
-2) Create repository variable:
-
-- VITE_API_BASE_URL=https://your-service.up.railway.app/api
-
-3) Push to main branch to trigger workflow.
-4) Frontend will be published to:
-
-- https://YOUR_GITHUB_USERNAME.github.io/REPO_NAME/
-
-## Optional SQL Server Mode
-
-If needed later, switch backend to SQL mode:
+If required later, switch backend to SqlServer by setting:
 
 - StorageProvider=SqlServer
 - ConnectionStrings__DefaultConnection=your_sql_server_connection_string
 
-The Dapper SQL repository and schema initialization are already implemented.
+The Dapper SQL repository and schema bootstrap are already implemented.

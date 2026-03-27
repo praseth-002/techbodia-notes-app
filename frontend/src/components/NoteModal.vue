@@ -1,39 +1,39 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-xl">
-      <h2 class="text-xl font-bold mb-4">{{ isEditing ? 'Edit Note' : 'New Note' }}</h2>
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl shadow-slate-900/20">
+      <h2 class="mb-4 text-xl font-bold text-slate-900">{{ isEditing ? 'Edit Note' : 'New Note' }}</h2>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+        <label class="mb-1 block text-sm font-medium text-slate-700">Title *</label>
         <input
           v-model="form.title"
           type="text"
           placeholder="Note title"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
         />
         <p v-if="error" class="text-red-500 text-sm mt-1">{{ error }}</p>
       </div>
 
       <div class="mb-6">
-        <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+        <label class="mb-1 block text-sm font-medium text-slate-700">Content</label>
         <textarea
           v-model="form.content"
           placeholder="Note content (optional)"
           rows="4"
-          class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          class="w-full resize-none rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
         />
       </div>
 
       <div class="flex justify-end gap-3">
         <button
           @click="$emit('close')"
-          class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50"
+          class="rounded-lg border border-slate-300 px-4 py-2 text-slate-600 transition hover:bg-slate-50"
         >
           Cancel
         </button>
         <button
           @click="submit"
-          class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+          class="rounded-lg bg-sky-600 px-4 py-2 text-white transition hover:bg-sky-700"
         >
           {{ isEditing ? 'Save Changes' : 'Create Note' }}
         </button>
@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { Note } from '../types/note'
 
 const props = defineProps<{
