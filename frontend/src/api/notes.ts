@@ -1,7 +1,22 @@
 import axios from 'axios'
 import type { Note, CreateNoteDto, UpdateNoteDto } from '../types/note'
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5187/api'
+function resolveApiBaseUrl() {
+  const configured = import.meta.env.VITE_API_BASE_URL?.trim()
+  if (!configured) {
+    return 'http://localhost:5187/api'
+  }
+
+  const withProtocol = /^https?:\/\//i.test(configured)
+    ? configured
+    : `https://${configured}`
+
+  return withProtocol.replace(/\/+$/, '').endsWith('/api')
+    ? withProtocol.replace(/\/+$/, '')
+    : `${withProtocol.replace(/\/+$/, '')}/api`
+}
+
+const apiBaseUrl = resolveApiBaseUrl()
 
 const api = axios.create({
   baseURL: apiBaseUrl,
