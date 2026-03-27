@@ -94,8 +94,7 @@
               <button @click="handleDelete(note.id)" class="text-sm text-slate-400 transition hover:text-red-500">Delete</button>
             </div>
           </div>
-          <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ note.content ?? 'No content' }}</p>
-          <p class="mt-3 text-xs text-slate-400">{{ formatDate(note.createdAt) }}</p>
+          <p class="mt-2 text-xs text-slate-400">Created: {{ formatDate(note.createdAt) }}</p>
         </div>
       </div>
       </template>
