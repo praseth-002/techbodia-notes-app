@@ -17,41 +17,35 @@ Full-stack notes application built for internship assessment.
 
 ## How It Works
 
-Your notes are stored in the backend's memory, so they disappear if the server restarts.
+Notes are stored in the backend's memory, so they disappear if the server restarts.
 
 ## Feature Checklist
 
 ### Core Features
-- [x] Create notes with a title and optional content
-- [x] View list of all your notes with dates
-- [x] Click on a note to read it fully
-- [x] Edit notes (change title and content)
-- [x] Delete notes
-- [x] Dates are set automatically
+- [x] Create a Note
+- [x] Read Notes
+- [x] Update a Note
+- [x] Delete a Note
 
-### Frontend Features
+### Frontend
 - [x] Login with username
-- [x] Create, edit, delete notes
-- [x] Search notes
-- [x] Sort by newest/oldest
-- [x] Works on mobile and desktop
-- [x] Connects to the backend API
-- [x] Saves application state locally
-- [x] View full note details
-- [x] Create/edit notes form
+- [x] Notes list page with CRUD operations
+- [x] Simple filtering and sorting functionality
+- [x] Search
+- [x] Responsive design using TailwindCss
+- [x] Perform basic API integrations using Axios or Fetch
+- [x] State management
 
-### Backend Features
-- [x] Web API that handles note requests
-- [x] User login via username
-- [x] Only show your own notes
-- [x] Create, read, update, delete notes
-- [x] Save notes when you create/edit them
-- [x] Runs in Docker containers
+### Backend
+- [ ] Authentication & Authorization
+- [x] CRUD notes
+- [x] user can only read, update and delete their own notes
+- [ ] using Dapper for ORM with a SQL Server database
 
 ### Deployment
 - [x] Frontend deploys automatically to GitHub Pages
 - [x] Backend deploys automatically to Railway
-- [x] Docker configuration
+- [ ] SQL server
 
 ## Run Locally
 
