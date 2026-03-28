@@ -22,7 +22,20 @@ namespace backend.Data
             var configured = _configuration.GetConnectionString("DefaultConnection");
             if (!string.IsNullOrWhiteSpace(configured))
             {
-                return configured;
+                var trimmed = configured.Trim();
+
+                if (trimmed.StartsWith("mysql://", StringComparison.OrdinalIgnoreCase) ||
+                    trimmed.StartsWith("mariadb://", StringComparison.OrdinalIgnoreCase))
+                {
+                    return BuildFromUrl(trimmed);
+                }
+
+                // Railway-style variable templates should be resolved by platform.
+                // If they are still present at runtime, ignore and continue probing direct vars.
+                if (!trimmed.StartsWith("${{", StringComparison.Ordinal))
+                {
+                    return trimmed;
+                }
             }
 
             var mysqlUrl = _configuration["MYSQL_URL"] ?? _configuration["DATABASE_URL"];
@@ -60,7 +73,13 @@ namespace backend.Data
 
         private static string BuildFromUrl(string mysqlUrl)
         {
-            var uri = new Uri(mysqlUrl);
+            var normalizedUrl = mysqlUrl.Trim();
+            if (normalizedUrl.StartsWith("mariadb://", StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedUrl = "mysql://" + normalizedUrl["mariadb://".Length..];
+            }
+
+            var uri = new Uri(normalizedUrl);
             var userInfo = uri.UserInfo.Split(':', 2);
 
             var builder = new MySqlConnectionStringBuilder
