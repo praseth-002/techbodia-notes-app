@@ -6,18 +6,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var storageProvider = builder.Configuration["StorageProvider"] ?? "InMemory";
+// Use InMemory storage for notes
+builder.Services.AddSingleton<INoteRepository, InMemoryNoteRepository>();
+
 var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
     ?? ["http://localhost:5173", "http://127.0.0.1:5173"];
-
-if (string.Equals(storageProvider, "SqlServer", StringComparison.OrdinalIgnoreCase))
-{
-    builder.Services.AddScoped<INoteRepository, NoteRepository>();
-}
-else
-{
-    builder.Services.AddSingleton<INoteRepository, InMemoryNoteRepository>();
-}
 
 // CORS — allows your Vue frontend to talk to this API
 builder.Services.AddCors(options =>

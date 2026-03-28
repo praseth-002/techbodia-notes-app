@@ -17,7 +17,7 @@ Full-stack notes application built for internship assessment.
 
 ## How It Works
 
-Your notes are stored in the backend's memory, so they disappear if the server restarts. This is fine for testing, but in the future you can switch to a real database.
+Your notes are stored in the backend's memory, so they disappear if the server restarts.
 
 ## Feature Checklist
 
@@ -47,7 +47,6 @@ Your notes are stored in the backend's memory, so they disappear if the server r
 - [x] Create, read, update, delete notes
 - [x] Save notes when you create/edit them
 - [x] Runs in Docker containers
-- [ ] Use a real database (currently stores in memory)
 
 ### Deployment
 - [x] Frontend deploys automatically to GitHub Pages
@@ -91,10 +90,3 @@ Key files:
 All /api/notes routes require this header:
 
 - X-User-Name: your_username
-
-## To Use a Real Database (Optional)
-
-If you want your notes to stay saved forever, you can switch from the in-memory storage to a real database:
-
-- Set: StorageProvider=SqlServer
-- Set: ConnectionStrings__DefaultConnection=your_database_connection

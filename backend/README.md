@@ -6,9 +6,7 @@ ASP.NET Core Web API for notes CRUD.
 
 - Notes CRUD endpoints
 - Per-user note ownership via X-User-Name request header
-- Pluggable storage mode:
-  - InMemory (default)
-  - SqlServer with Dapper
+- In-memory storage
 
 ## Run Locally
 
@@ -43,28 +41,6 @@ Set environment variables:
 Optional health check path:
 
 - /health
-
-## Switch to SQL Server + Dapper
-
-1. Start SQL Server (optional Docker path from repo root):
-
-```sh
-docker compose up -d
-```
-
-2. Edit appsettings.Development.json:
-
-- Set StorageProvider to SqlServer
-- Set ConnectionStrings.DefaultConnection
-
-3. Restart backend:
-
-```sh
-dotnet run --launch-profile http
-```
-
-The Notes table is auto-created on startup in SQL mode.
-A reference SQL script is also available at sql/init.sql.
 
 ## API Contract
 
