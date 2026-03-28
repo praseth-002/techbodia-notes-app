@@ -4,10 +4,10 @@ Full-stack notes application built for internship assessment.
 
 ## Stack
 
-- Frontend: Vue 3, TypeScript, Tailwind CSS
-- Backend: ASP.NET Core Web API (.NET 9)
-- Data access: Dapper
-- Storage mode: InMemory by default, SqlServer optional
+- Frontend: Vue 3 (web framework), TypeScript (language), Tailwind CSS (styling)
+- Backend: .NET 9 (web server)
+- Storage: In-memory (data stored while app runs, resets on restart)
+- Hosting: GitHub Pages (frontend), Railway (backend)
 
 ## Live URLs
 
@@ -15,10 +15,44 @@ Full-stack notes application built for internship assessment.
 - Backend health: https://techbodia-notes-app-production.up.railway.app/health
 - Backend API base: https://techbodia-notes-app-production.up.railway.app/api
 
-## Current Deployment Mode
+## How It Works
 
-The deployed version currently uses InMemory storage for quick proof-of-concept.
-Data can reset when the backend restarts.
+Your notes are stored in the backend's memory, so they disappear if the server restarts. This is fine for testing, but in the future you can switch to a real database.
+
+## Feature Checklist
+
+### Core Features
+- [x] Create notes with a title and optional content
+- [x] View list of all your notes with dates
+- [x] Click on a note to read it fully
+- [x] Edit notes (change title and content)
+- [x] Delete notes
+- [x] Dates are set automatically
+
+### Frontend Features
+- [x] Login with username
+- [x] Create, edit, delete notes
+- [x] Search notes
+- [x] Sort by newest/oldest
+- [x] Works on mobile and desktop
+- [x] Connects to the backend API
+- [x] Saves application state locally
+- [x] View full note details
+- [x] Create/edit notes form
+
+### Backend Features
+- [x] Web API that handles note requests
+- [x] User login via username
+- [x] Only show your own notes
+- [x] Create, read, update, delete notes
+- [x] Save notes when you create/edit them
+- [x] Runs in Docker containers
+- [ ] Use a real database (currently stores in memory)
+
+### Deployment
+- [x] Frontend deploys automatically to GitHub Pages
+- [x] Backend deploys automatically to Railway
+- [x] Docker configuration
 
 ## Run Locally
 
@@ -43,8 +77,8 @@ npm run dev
 
 ## Deployment
 
-- Railway backend deployment is configured with Docker.
-- GitHub Pages frontend deployment is configured with GitHub Actions.
+- Frontend automatically deploys when you push to the repo (GitHub Pages)
+- Backend automatically deploys when you push to the repo (Railway)
 
 Key files:
 
@@ -58,11 +92,9 @@ All /api/notes routes require this header:
 
 - X-User-Name: your_username
 
-## Optional SQL Server mode
+## To Use a Real Database (Optional)
 
-If required later, switch backend to SqlServer by setting:
+If you want your notes to stay saved forever, you can switch from the in-memory storage to a real database:
 
-- StorageProvider=SqlServer
-- ConnectionStrings__DefaultConnection=your_sql_server_connection_string
-
-The Dapper SQL repository and schema bootstrap are already implemented.
+- Set: StorageProvider=SqlServer
+- Set: ConnectionStrings__DefaultConnection=your_database_connection
