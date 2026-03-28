@@ -6,7 +6,7 @@ ASP.NET Core Web API for notes CRUD.
 
 - Notes CRUD endpoints
 - Per-user note ownership via X-User-Name request header
-- In-memory storage
+- Configurable storage provider: InMemory or MySql
 
 ## Run Locally
 
@@ -41,6 +41,21 @@ Set environment variables:
 Optional health check path:
 
 - /health
+
+## Railway Deploy (MySQL)
+
+1. In Railway, add a MySQL service to the project.
+2. Set API environment variables:
+
+- StorageProvider=MySql
+- ConnectionStrings__DefaultConnection=${{MySQL.MYSQL_URL}}
+- Cors__AllowedOrigins__0=http://localhost:5173
+- Cors__AllowedOrigins__1=http://127.0.0.1:5173
+- Cors__AllowedOrigins__2=https://praseth-002.github.io
+
+3. Redeploy the backend service.
+
+The backend creates the `notes` table automatically on startup.
 
 ## API Contract
 

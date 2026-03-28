@@ -6,7 +6,7 @@ Full-stack notes application built for internship assessment.
 
 - Frontend: Vue 3 (web framework), TypeScript (language), Tailwind CSS (styling)
 - Backend: .NET 9 (web server)
-- Storage: In-memory (data stored while app runs, resets on restart)
+- Storage: In-memory or MySQL (persistent)
 - Hosting: GitHub Pages (frontend), Railway (backend)
 
 ## Live URLs
@@ -17,7 +17,8 @@ Full-stack notes application built for internship assessment.
 
 ## How It Works
 
-Notes are stored in the backend's memory, so they disappear if the server restarts.
+By default, notes are stored in backend memory for local development.
+In Railway, you can switch to MySQL so notes persist across restarts.
 
 ## Feature Checklist
 
