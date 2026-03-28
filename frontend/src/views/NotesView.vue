@@ -557,13 +557,40 @@ function formatDate(dateStr: string) {
     position: static;
     flex-direction: row;
     flex-wrap: wrap;
-    padding: 14px;
+    padding: 10px;
     border-right: none;
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
+    border-bottom: 1.5px solid var(--border);
+    gap: 6px;
   }
 
-  .sidebar-top { flex-direction: row; align-items: center; flex: 1; }
+  .sidebar-top {
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .brand { font-size: 16px; }
+
+  .user-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .new-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .logout-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
   .sidebar-meta { display: none; }
   .main {
     margin: 10px;
