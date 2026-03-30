@@ -1,13 +1,16 @@
 # techbodia-notes-app
 
-Full-stack notes application built for internship assessment.
+Full-stack CRUD notes app for internship practice.
+
+Users log in with username only (no password/JWT auth). Notes are isolated by username.
 
 ## Stack
 
-- Frontend: Vue 3 (web framework), TypeScript (language), Tailwind CSS (styling)
-- Backend: .NET 9 (web server)
-- Storage: In-memory or MySQL (persistent)
-- Hosting: GitHub Pages (frontend), Railway (backend)
+- Frontend: Vue 3 + TypeScript + Tailwind CSS + Pinia + Axios
+- Backend: ASP.NET Core Web API (.NET 9)
+- ORM: Dapper
+- Database: InMemory (default local) or MySQL (Railway)
+- Hosting: GitHub Pages (frontend) + Railway (backend)
 
 ## Live URLs
 
@@ -15,49 +18,41 @@ Full-stack notes application built for internship assessment.
 - Backend health: https://techbodia-notes-app-production.up.railway.app/health
 - Backend API base: https://techbodia-notes-app-production.up.railway.app/api
 
-## How It Works
+## Requirement Status
 
-By default, notes are stored in backend memory for local development.
-In Railway, you can switch to MySQL so notes persist across restarts.
+### Core Notes Features
+- [x] Create note (title required, content optional)
+- [x] Read notes list and note details
+- [x] Update note and refresh `updatedAt`
+- [x] Delete note
 
-## Feature Checklist
-
-### Core Features
-- [x] Create a Note
-- [x] Read Notes
-- [x] Update a Note
-- [x] Delete a Note
-
-### Frontend
-- [x] Login with username
-- [x] Notes list page with CRUD operations
-- [x] Simple filtering and sorting functionality
+### Frontend Requirements
+- [x] Notes list page with full CRUD
 - [x] Search
-- [x] Responsive design using TailwindCss
-- [x] Perform basic API integrations using Axios or Fetch
-- [x] State management
+- [x] Simple sorting (newest/oldest)
+- [x] Responsive layout
+- [x] API integration with Axios
+- [x] State management with Pinia
+- [x] Username login form (no password)
+- [ ] Register form (optional item)
 
-### Backend
-- [ ] Authentication & Authorization
-- [x] CRUD notes
-- [x] user can only read, update and delete their own notes
-- [ ] using Dapper for ORM with a SQL Server database
-
-### Deployment
-- [x] Frontend deploys automatically to GitHub Pages
-- [x] Backend deploys automatically to Railway
-- [ ] SQL server
+### Backend Requirements
+- [x] Notes CRUD API
+- [x] Per-user access scoping (by `X-User-Name`)
+- [x] Dapper ORM
+- [ ] SQL Server database (current implementation uses MySQL)
+- [ ] Authentication/Authorization (optional item)
 
 ## Run Locally
 
-1. Start backend
+1. Start backend:
 
 ```sh
 cd backend
 dotnet run --launch-profile http
 ```
 
-2. Start frontend
+2. Start frontend:
 
 ```sh
 cd frontend
@@ -65,23 +60,14 @@ npm install
 npm run dev
 ```
 
-3. Open app
+3. Open:
 
 - http://127.0.0.1:5173
 
-## Deployment
+## API Contract
 
-- Frontend automatically deploys when you push to the repo (GitHub Pages)
-- Backend automatically deploys when you push to the repo (Railway)
+All `/api/notes` endpoints require request header:
 
-Key files:
+- `X-User-Name: your_username`
 
-- railway.json
-- backend/Dockerfile
-- .github/workflows/frontend-pages.yml
-
-## Notes API contract
-
-All /api/notes routes require this header:
-
-- X-User-Name: your_username
+If header is missing/empty, API returns `400`.
